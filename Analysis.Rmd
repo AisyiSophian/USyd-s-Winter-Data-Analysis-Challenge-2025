@@ -1,0 +1,348 @@
+# Data Analysis
+
+Opal Patronage
+
+<https://opendata.transport.nsw.gov.au/data/dataset/opal-patronage>
+
+January 2020
+
+The structure of the data set
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+data <- read.table("data/opal_patronage/Opal_Patronage_20200101.txt",
+                   header = TRUE,
+                   sep = "|")
+
+str(data)
+```
+
+There are 4 modes of transportation offered by Transport by NSW
+
+```{r}
+unique(data$mode_name)
+```
+
+The locations covered by each mode of transportion:
+
+Train
+
+```{r}
+unique(filter(data, mode_name == "Train")$ti_region)
+```
+
+Bus
+
+```{r}
+unique(filter(data, mode_name == "Bus")$ti_region)
+```
+
+Ferry
+
+```{r}
+unique(filter(data, mode_name == "Ferry")$ti_region)
+```
+
+Light rail
+
+```{r}
+unique(filter(data, mode_name == "Light rail")$ti_region)
+```
+
+Combining all of the .txt files into one big .txt file
+
+```{r}
+library(dplyr)
+
+folder_path <- "data/opal_patronage"
+file_list <- list.files(path = folder_path, pattern = "\\.txt$", full.names = TRUE)
+
+# Define column names
+col_names <- c("trip_origin_date", "mode_name", "ti_region", "tap_hour", "Tap_Ons", "Tap_Offs")
+
+# Function to read and clean a single file
+read_clean_file <- function(file, skip_header = FALSE) {
+  lines <- readLines(file, warn = FALSE)
+  
+  if (length(lines) < 2) return(NULL)  # Skip empty or header-only files
+  
+  if (skip_header) {
+    lines <- lines[-1]
+  }
+  
+  good_lines <- lines[sapply(lines, function(line) length(strsplit(line, "\\|")[[1]]) == 6)]
+  
+  if (length(good_lines) == 0) return(NULL)
+  
+  df <- read.table(text = good_lines, sep = "|", header = FALSE, stringsAsFactors = FALSE, colClasses = "character")
+  colnames(df) <- col_names
+  return(df)
+}
+
+# Read the first file
+combined_data <- read_clean_file(file_list[1], skip_header = FALSE)
+
+# Read and append the rest
+for (file in file_list[-1]) {
+  df <- read_clean_file(file, skip_header = TRUE)
+  if (!is.null(df)) {
+    combined_data <- bind_rows(combined_data, df)
+  }
+}
+
+# Write the final result
+write.table(combined_data,
+            file = "data/opal_patronage/Opal_Patronage_Combined.txt",
+            sep = "|",
+            row.names = FALSE,
+            col.names = TRUE,
+            quote = FALSE)
+```
+
+Reading the combined .txt file
+
+Finding:\
+In some of the dataset, like 20220208, there is an UNKNOWN mode of transportation
+
+```{r}
+unique(combined_data$mode_name)
+sum(combined_data$mode_name != "UNKNOWN")
+nrow(combined_data)
+```
+
+Removing certain districts that are far from Sydney, NSW
+
+```{r}
+filtered_data <- combined_data[combined_data$ti_region %in% c("Parramatta", "Chatswood", "Macquarie Park", "North Sydney", "Strathfield", "Sydney CBD"), ]
+
+# To confirm
+unique(filtered_data$ti_region)
+```
+
+Combining all tap hours from 0 - 23 into per day
+
+```{r}
+# Replace "<50" with NA, then convert Tap_Ons and Tap_Offs to numeric
+filtered_data$Tap_Ons <- as.numeric(gsub("<50", NA, filtered_data$Tap_Ons))
+filtered_data$Tap_Offs <- as.numeric(gsub("<50", NA, filtered_data$Tap_Offs))
+
+# Remove rows with NA values in Tap_Ons or Tap_Offs
+filtered_data <- filtered_data[!is.na(filtered_data$Tap_Ons) & !is.na(filtered_data$Tap_Offs), ]
+
+# Aggregate sums by trip_origin_date, mode_name, and ti_region
+daily_totals_by_region <- aggregate(
+  cbind(Tap_Ons, Tap_Offs) ~ trip_origin_date + mode_name + ti_region,
+  data = filtered_data,
+  FUN = sum
+)
+
+# Rename columns for clarity
+colnames(daily_totals_by_region) <- c(
+  "trip_origin_date",
+  "mode_name",
+  "ti_region",
+  "Total_Tap_Ons",
+  "Total_Tap_Offs"
+)
+
+str(daily_totals_by_region)
+```
+
+Confirming
+
+```{r}
+unique(filter(daily_totals_by_region, mode_name == "Train")$ti_region)
+```
+
+# Rainfall Data set
+
+Reading rainfall data (choosing Sydney Botanic Garden meteorology station)
+
+```{r}
+rain <- read.csv("data/rainfall/sydney_botanic_garden.csv",
+                 header = TRUE,)
+
+str(rain)
+```
+
+Filtering the date so it starts on 1st January 2020
+
+```{r}
+filter(rain, Year >= 2020)
+
+```
+
+Merging the Opal Patronage and rainfall datasets into one
+
+```{r}
+library(dplyr)
+library(readr)
+library(lubridate)
+
+# 1. Load and combine rainfall data (same as before)
+rainfall_folder <- "data/rainfall"
+rainfall_files <- list.files(rainfall_folder, pattern = "\\.csv$", full.names = TRUE)
+
+rainfall_list <- lapply(rainfall_files, function(file) {
+  region <- tools::file_path_sans_ext(basename(file))
+  
+  df <- read_csv(file, show_col_types = FALSE)
+  
+  df <- df %>%
+    mutate(
+      # keep ti_region exactly as filename (with underscores)
+      ti_region = tolower(trimws(region)),
+      date = as.Date(paste(Year, Month, Day, sep = "-"))
+    ) %>%
+    select(ti_region, date, Rainfall_amount = `Rainfall amount (millimetres)`)
+  
+  return(df)
+})
+
+rainfall_data <- bind_rows(rainfall_list)
+
+# 2. Prepare Opal data, but replace spaces with underscores to match rainfall_data
+daily_totals_by_region <- daily_totals_by_region %>%
+  mutate(
+    # lowercase + trim + replace spaces with underscores
+    ti_region = tolower(trimws(ti_region)),
+    ti_region = gsub(" ", "_", ti_region),
+    trip_origin_date = as.Date(trip_origin_date)
+  )
+
+# 3. Join on ti_region and date
+big_data <- daily_totals_by_region %>%
+  left_join(rainfall_data, by = c("ti_region", "trip_origin_date" = "date"))
+
+# Check the result
+head(big_data)
+summary(big_data$Rainfall_amount)
+
+
+
+
+```
+
+```{r}
+unique(filter(big_data, mode_name == "Train")$ti_region)
+```
+
+Plotting tap ins vs rainfall
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+big_data %>%
+  filter(tolower(mode_name) == "train", tolower(ti_region) == "sydney_cbd") %>%
+  ggplot(aes(x = Rainfall_amount, y = Total_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "blue") +
+  labs(
+    title = "Train Tap-Ons vs Rainfall in Sydney CBD",
+    x = "Rainfall (mm)",
+    y = "Total Opal Tap-Ons"
+  ) +
+  theme_minimal()
+
+
+
+```
+
+### Train (Tap ins vs Rainfall)
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+big_data %>%
+  filter(tolower(mode_name) == "train") %>%
+  ggplot(aes(x = Rainfall_amount, y = Total_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "blue") +
+  facet_wrap(~ ti_region, scales = "free") +  # One plot per region, scales free for each
+  labs(
+    title = "Train Tap-Ons vs Rainfall by Region",
+    x = "Rainfall (mm)",
+    y = "Total Opal Tap-Ons"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 8)  # smaller facet labels if many regions
+  )
+
+```
+
+Checking correlation
+
+```{r}
+library(dplyr)
+
+# Filter train data (example: Sydney CBD)
+train_sydney <- big_data %>%
+  filter(tolower(mode_name) == "train", ti_region == "sydney_cbd") %>%
+  filter(!is.na(Rainfall_amount) & !is.na(Total_Tap_Ons))
+
+# Calculate Pearson correlation
+correlation <- cor(train_sydney$Rainfall_amount, train_sydney$Total_Tap_Ons)
+
+print(correlation)
+
+```
+
+Bus
+
+```{r}
+big_data %>%
+  filter(tolower(mode_name) == "bus") %>%
+  ggplot(aes(x = Rainfall_amount, y = Total_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "red") +
+  facet_wrap(~ ti_region, scales = "free") +  # One plot per region, scales free for each
+  labs(
+    title = "Bus Tap-Ons vs Rainfall by Region",
+    x = "Rainfall (mm)",
+    y = "Total Opal Tap-Ons"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 8)  # smaller facet labels if many regions
+  )
+```
+
+Ferrry
+
+```{r}
+big_data %>%
+  filter(tolower(mode_name) == "ferry") %>%
+  ggplot(aes(x = Rainfall_amount, y = Total_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "green") +
+  facet_wrap(~ ti_region, scales = "free") +  # One plot per region, scales free for each
+  labs(
+    title = "Ferry Tap-Ons vs Rainfall by Region",
+    x = "Rainfall (mm)",
+    y = "Total Opal Tap-Ons"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 8)  # smaller facet labels if many regions
+  )
+```
+
+Light rail
+
+```{r}
+big_data %>%
+  filter(tolower(mode_name) == "light rail") %>%
+  ggplot(aes(x = Rainfall_amount, y = Total_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "purple") +
+  facet_wrap(~ ti_region, scales = "free") +  # One plot per region, scales free for each
+  labs(
+    title = "Ferry Tap-Ons vs Rainfall by Region",
+    x = "Rainfall (mm)",
+    y = "Total Opal Tap-Ons"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 8)  # smaller facet labels if many regions
+  )
+```
