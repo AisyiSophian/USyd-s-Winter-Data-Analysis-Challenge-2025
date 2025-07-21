@@ -1,0 +1,635 @@
+MonthYear,Station,"Station_Type ",Entry_Exit,Trip
+2024-07,Aberdeen Station,Train,Exit,Less than 50
+2024-07,Aberdeen Station,Train,Entry,Less than 50
+2024-07,Adamstown Station,Train,Exit,2293
+2024-07,Adamstown Station,Train,Entry,2484
+2024-07,Albion Park Station,Train,Exit,5297
+2024-07,Albion Park Station,Train,Entry,5935
+2024-07,Allawah Station,Train,Exit,55584
+2024-07,Allawah Station,Train,Entry,61790
+2024-07,Arncliffe Station,Train,Exit,51602
+2024-07,Arncliffe Station,Train,Entry,55768
+2024-07,Artarmon Station,Train,Exit,96624
+2024-07,Artarmon Station,Train,Entry,102147
+2024-07,Ashfield Station,Train,Exit,257485
+2024-07,Ashfield Station,Train,Entry,256918
+2024-07,Asquith Station,Train,Exit,26198
+2024-07,Asquith Station,Train,Entry,29867
+2024-07,Auburn Station,Train,Exit,366623
+2024-07,Auburn Station,Train,Entry,384224
+2024-07,Austinmer Station,Train,Exit,1456
+2024-07,Austinmer Station,Train,Entry,1789
+2024-07,Awaba Station,Train,Exit,373
+2024-07,Awaba Station,Train,Entry,449
+2024-07,Banksia Station,Train,Exit,32572
+2024-07,Banksia Station,Train,Entry,35339
+2024-07,Bankstown Station,Train,Exit,214527
+2024-07,Bankstown Station,Train,Entry,211046
+2024-07,Bardwell Park Station,Train,Exit,23309
+2024-07,Bardwell Park Station,Train,Entry,25189
+2024-07,Bargo Station,Train,Exit,1169
+2024-07,Bargo Station,Train,Entry,1302
+2024-07,Bathurst Station,Train,Exit,2018
+2024-07,Bathurst Station,Train,Entry,2778
+2024-07,Beecroft Station,Train,Exit,30289
+2024-07,Beecroft Station,Train,Entry,31582
+2024-07,Bell Station,Train,Exit,61
+2024-07,Bell Station,Train,Entry,76
+2024-07,Bella Vista Station,Metro,Exit,55712
+2024-07,Bella Vista Station,Metro,Entry,59471
+2024-07,Bellambi Station,Train,Exit,1603
+2024-07,Bellambi Station,Train,Entry,1922
+2024-07,Belmore Station,Train,Exit,47218
+2024-07,Belmore Station,Train,Entry,52152
+2024-07,Berala Station,Train,Exit,43177
+2024-07,Berala Station,Train,Entry,43898
+2024-07,Beresfield Station,Train,Exit,2811
+2024-07,Beresfield Station,Train,Entry,3063
+2024-07,Berowra Station,Train,Exit,24645
+2024-07,Berowra Station,Train,Entry,26466
+2024-07,Berry Station,Train,Exit,1520
+2024-07,Berry Station,Train,Entry,1499
+2024-07,Beverly Hills Station,Train,Exit,39852
+2024-07,Beverly Hills Station,Train,Entry,43976
+2024-07,Bexley North Station,Train,Exit,28127
+2024-07,Bexley North Station,Train,Entry,30755
+2024-07,Birrong Station,Train,Exit,19524
+2024-07,Birrong Station,Train,Entry,20578
+2024-07,Blackheath Station,Train,Exit,4664
+2024-07,Blackheath Station,Train,Entry,4893
+2024-07,Blacktown Station,Train,Exit,404911
+2024-07,Blacktown Station,Train,Entry,393270
+2024-07,Blaxland Station,Train,Exit,10095
+2024-07,Blaxland Station,Train,Entry,10749
+2024-07,Bomaderry Station,Train,Exit,5711
+2024-07,Bomaderry Station,Train,Entry,6907
+2024-07,Bombo Station,Train,Exit,561
+2024-07,Bombo Station,Train,Entry,727
+2024-07,Bondi Junction Station,Train,Exit,539604
+2024-07,Bondi Junction Station,Train,Entry,534884
+2024-07,Booragul Station,Train,Exit,578
+2024-07,Booragul Station,Train,Entry,670
+2024-07,Bowral Station,Train,Exit,5311
+2024-07,Bowral Station,Train,Entry,5557
+2024-07,Branxton Station,Train,Exit,92
+2024-07,Branxton Station,Train,Entry,136
+2024-07,Broadmeadow Station,Train,Exit,18741
+2024-07,Broadmeadow Station,Train,Entry,19683
+2024-07,Bullaburra Station,Train,Exit,1075
+2024-07,Bullaburra Station,Train,Entry,1140
+2024-07,Bulli Station,Train,Exit,2505
+2024-07,Bulli Station,Train,Entry,2812
+2024-07,Bundanoon Station,Train,Exit,252
+2024-07,Bundanoon Station,Train,Entry,376
+2024-07,Burradoo Station,Train,Exit,221
+2024-07,Burradoo Station,Train,Entry,213
+2024-07,Burwood Station,Train,Exit,507693
+2024-07,Burwood Station,Train,Entry,498018
+2024-07,Cabramatta Station,Train,Exit,201476
+2024-07,Cabramatta Station,Train,Entry,203888
+2024-07,Camellia Station,Train,Exit,2828
+2024-07,Camellia Station,Train,Entry,3774
+2024-07,Campbelltown Station,Train,Exit,134059
+2024-07,Campbelltown Station,Train,Entry,133830
+2024-07,Campsie Station,Train,Exit,162518
+2024-07,Campsie Station,Train,Entry,163538
+2024-07,Canley Vale Station,Train,Exit,56246
+2024-07,Canley Vale Station,Train,Entry,61498
+2024-07,Canterbury Station,Train,Exit,48417
+2024-07,Canterbury Station,Train,Entry,53413
+2024-07,Cardiff Station,Train,Exit,18570
+2024-07,Cardiff Station,Train,Entry,20242
+2024-07,Caringbah Station,Train,Exit,55211
+2024-07,Caringbah Station,Train,Entry,57980
+2024-07,Carlingford Station,Train,Exit,2312
+2024-07,Carlingford Station,Train,Entry,2983
+2024-07,Carlton Station,Train,Exit,57940
+2024-07,Carlton Station,Train,Entry,62103
+2024-07,Carramar Station,Train,Exit,12394
+2024-07,Carramar Station,Train,Entry,14132
+2024-07,Castle Hill Station,Metro,Exit,146352
+2024-07,Castle Hill Station,Metro,Entry,140038
+2024-07,Casula Station,Train,Exit,8686
+2024-07,Casula Station,Train,Entry,10038
+2024-07,Central Station,Train,Exit,1959682
+2024-07,Central Station,Train,Entry,1907322
+2024-07,Chatswood Station,Shared,Exit,691912
+2024-07,Chatswood Station,Shared,Entry,669331
+2024-07,Cheltenham Station,Train,Exit,16193
+2024-07,Cheltenham Station,Train,Entry,19321
+2024-07,Cherrybrook Station,Metro,Exit,75554
+2024-07,Cherrybrook Station,Metro,Entry,80817
+2024-07,Chester Hill Station,Train,Exit,23060
+2024-07,Chester Hill Station,Train,Entry,24308
+2024-07,Circular Quay Station,Train,Exit,629743
+2024-07,Circular Quay Station,Train,Entry,619005
+2024-07,Clarendon Station,Train,Exit,2880
+2024-07,Clarendon Station,Train,Entry,2785
+2024-07,Clyde Station,Train,Exit,23553
+2024-07,Clyde Station,Train,Entry,24869
+2024-07,Coalcliff Station,Train,Exit,254
+2024-07,Coalcliff Station,Train,Entry,252
+2024-07,Cockle Creek Station,Train,Exit,1170
+2024-07,Cockle Creek Station,Train,Entry,1091
+2024-07,Coledale Station,Train,Exit,483
+2024-07,Coledale Station,Train,Entry,577
+2024-07,Como Station,Train,Exit,12186
+2024-07,Como Station,Train,Entry,14194
+2024-07,Concord West Station,Train,Exit,43245
+2024-07,Concord West Station,Train,Entry,46032
+2024-07,Coniston Station,Train,Exit,4644
+2024-07,Coniston Station,Train,Entry,4942
+2024-07,Corrimal Station,Train,Exit,2455
+2024-07,Corrimal Station,Train,Entry,2772
+2024-07,Cowan Station,Train,Exit,1402
+2024-07,Cowan Station,Train,Entry,1264
+2024-07,Cringila Station,Train,Exit,273
+2024-07,Cringila Station,Train,Entry,245
+2024-07,Cronulla Station,Train,Exit,54861
+2024-07,Cronulla Station,Train,Entry,58149
+2024-07,Croydon Station,Train,Exit,48399
+2024-07,Croydon Station,Train,Entry,52538
+2024-07,Dapto Station,Train,Exit,10253
+2024-07,Dapto Station,Train,Entry,11653
+2024-07,Denistone Station,Train,Exit,11314
+2024-07,Denistone Station,Train,Entry,13073
+2024-07,Domestic Station,Train,Exit,194464
+2024-07,Domestic Station,Train,Entry,218886
+2024-07,Doonside Station,Train,Exit,59499
+2024-07,Doonside Station,Train,Entry,64923
+2024-07,Dora Creek Station,Train,Exit,833
+2024-07,Dora Creek Station,Train,Entry,920
+2024-07,Douglas Park Station,Train,Exit,489
+2024-07,Douglas Park Station,Train,Entry,480
+2024-07,Dulwich Hill Station,Train,Exit,44709
+2024-07,Dulwich Hill Station,Train,Entry,49001
+2024-07,Dundas Station,Train,Exit,2614
+2024-07,Dundas Station,Train,Entry,2709
+2024-07,Dungog Station,Train,Exit,305
+2024-07,Dungog Station,Train,Entry,338
+2024-07,East Hills Station,Train,Exit,17110
+2024-07,East Hills Station,Train,Entry,18322
+2024-07,East Maitland Station,Train,Exit,395
+2024-07,East Maitland Station,Train,Entry,421
+2024-07,East Richmond Station,Train,Exit,5613
+2024-07,East Richmond Station,Train,Entry,4500
+2024-07,Eastwood Station,Train,Exit,181824
+2024-07,Eastwood Station,Train,Entry,179771
+2024-07,Edgecliff Station,Train,Exit,183758
+2024-07,Edgecliff Station,Train,Entry,186447
+2024-07,Edmondson Park Station,Train,Exit,95188
+2024-07,Edmondson Park Station,Train,Entry,98245
+2024-07,Emu Plains Station,Train,Exit,22474
+2024-07,Emu Plains Station,Train,Entry,23905
+2024-07,Engadine Station,Train,Exit,21041
+2024-07,Engadine Station,Train,Entry,22560
+2024-07,Epping Station,Shared,Exit,312242
+2024-07,Epping Station,Shared,Entry,318659
+2024-07,Erskineville Station,Train,Exit,56374
+2024-07,Erskineville Station,Train,Entry,63434
+2024-07,Exeter Station,Train,Exit,54
+2024-07,Exeter Station,Train,Entry,86
+2024-07,Fairfield Station,Train,Exit,139758
+2024-07,Fairfield Station,Train,Entry,142942
+2024-07,Fairy Meadow Station,Train,Exit,1926
+2024-07,Fairy Meadow Station,Train,Entry,2218
+2024-07,Fassifern Station,Train,Exit,9381
+2024-07,Fassifern Station,Train,Entry,10460
+2024-07,Faulconbridge Station,Train,Exit,1847
+2024-07,Faulconbridge Station,Train,Entry,1937
+2024-07,Flemington Station,Train,Exit,120735
+2024-07,Flemington Station,Train,Entry,126873
+2024-07,Gerringong Station,Train,Exit,931
+2024-07,Gerringong Station,Train,Entry,1008
+2024-07,Glenbrook Station,Train,Exit,8399
+2024-07,Glenbrook Station,Train,Entry,8978
+2024-07,Glenfield Station,Train,Exit,116585
+2024-07,Glenfield Station,Train,Entry,122947
+2024-07,Gordon Station,Train,Exit,140055
+2024-07,Gordon Station,Train,Entry,142520
+2024-07,Gosford Station,Train,Exit,100439
+2024-07,Gosford Station,Train,Entry,100886
+2024-07,Goulburn Station,Train,Exit,901
+2024-07,Goulburn Station,Train,Entry,1142
+2024-07,Granville Station,Train,Exit,166515
+2024-07,Granville Station,Train,Entry,176591
+2024-07,Green Square Station,Train,Exit,259323
+2024-07,Green Square Station,Train,Entry,269355
+2024-07,Greta Station,Train,Exit,Less than 50
+2024-07,Greta Station,Train,Entry,Less than 50
+2024-07,Guildford Station,Train,Exit,66310
+2024-07,Guildford Station,Train,Entry,73452
+2024-07,Gymea Station,Train,Exit,39062
+2024-07,Gymea Station,Train,Entry,42343
+2024-07,Hamilton Station,Train,Exit,14817
+2024-07,Hamilton Station,Train,Entry,14748
+2024-07,Harris Park Station,Train,Exit,68848
+2024-07,Harris Park Station,Train,Entry,68049
+2024-07,Hawkesbury River Station,Train,Exit,5864
+2024-07,Hawkesbury River Station,Train,Entry,6210
+2024-07,Hazelbrook Station,Train,Exit,5668
+2024-07,Hazelbrook Station,Train,Entry,6022
+2024-07,Heathcote Station,Train,Exit,9259
+2024-07,Heathcote Station,Train,Entry,9676
+2024-07,Helensburgh Station,Train,Exit,6574
+2024-07,Helensburgh Station,Train,Entry,7055
+2024-07,Hexham Station,Train,Exit,189
+2024-07,Hexham Station,Train,Entry,172
+2024-07,High Street Station,Train,Exit,384
+2024-07,High Street Station,Train,Entry,281
+2024-07,Hilldale Station,Train,Exit,Less than 50
+2024-07,Hilldale Station,Train,Entry,Less than 50
+2024-07,Hills Showground Station,Metro,Exit,69361
+2024-07,Hills Showground Station,Metro,Entry,72514
+2024-07,Holsworthy Station,Train,Exit,65318
+2024-07,Holsworthy Station,Train,Entry,68243
+2024-07,Homebush Station,Train,Exit,83506
+2024-07,Homebush Station,Train,Entry,91258
+2024-07,Hornsby Station,Train,Exit,276867
+2024-07,Hornsby Station,Train,Entry,272793
+2024-07,Hurlstone Park Station,Train,Exit,24622
+2024-07,Hurlstone Park Station,Train,Entry,28055
+2024-07,Hurstville Station,Train,Exit,455725
+2024-07,Hurstville Station,Train,Entry,447535
+2024-07,Ingleburn Station,Train,Exit,70697
+2024-07,Ingleburn Station,Train,Entry,71728
+2024-07,International Station,Train,Exit,119127
+2024-07,International Station,Train,Entry,132906
+2024-07,Jannali Station,Train,Exit,49278
+2024-07,Jannali Station,Train,Entry,51586
+2024-07,Katoomba Station,Train,Exit,32056
+2024-07,Katoomba Station,Train,Entry,31788
+2024-07,Kellyville Station,Metro,Exit,79749
+2024-07,Kellyville Station,Metro,Entry,82221
+2024-07,Kembla Grange Station,Train,Exit,75
+2024-07,Kembla Grange Station,Train,Entry,55
+2024-07,Kiama Station,Train,Exit,12411
+2024-07,Kiama Station,Train,Entry,12753
+2024-07,Killara Station,Train,Exit,39035
+2024-07,Killara Station,Train,Entry,41676
+2024-07,Kings Cross Station,Train,Exit,356474
+2024-07,Kings Cross Station,Train,Entry,339350
+2024-07,Kingsgrove Station,Train,Exit,45961
+2024-07,Kingsgrove Station,Train,Entry,47996
+2024-07,Kingswood Station,Train,Exit,48664
+2024-07,Kingswood Station,Train,Entry,52494
+2024-07,Kirrawee Station,Train,Exit,37817
+2024-07,Kirrawee Station,Train,Entry,39183
+2024-07,Kogarah Station,Train,Exit,238986
+2024-07,Kogarah Station,Train,Entry,247769
+2024-07,Koolewong Station,Train,Exit,1154
+2024-07,Koolewong Station,Train,Entry,1538
+2024-07,Kotara Station,Train,Exit,1520
+2024-07,Kotara Station,Train,Entry,1227
+2024-07,Lakemba Station,Train,Exit,86361
+2024-07,Lakemba Station,Train,Entry,88927
+2024-07,Lapstone Station,Train,Exit,1515
+2024-07,Lapstone Station,Train,Entry,1756
+2024-07,Lawson Station,Train,Exit,3441
+2024-07,Lawson Station,Train,Entry,3423
+2024-07,Leightonfield Station,Train,Exit,4846
+2024-07,Leightonfield Station,Train,Entry,5004
+2024-07,Leppington Station,Train,Exit,90519
+2024-07,Leppington Station,Train,Entry,94613
+2024-07,Leumeah Station,Train,Exit,55470
+2024-07,Leumeah Station,Train,Entry,58532
+2024-07,Leura Station,Train,Exit,7756
+2024-07,Leura Station,Train,Entry,9745
+2024-07,Lewisham Station,Train,Exit,57371
+2024-07,Lewisham Station,Train,Entry,62366
+2024-07,Lidcombe Station,Train,Exit,322544
+2024-07,Lidcombe Station,Train,Entry,330604
+2024-07,Linden Station,Train,Exit,274
+2024-07,Linden Station,Train,Entry,319
+2024-07,Lindfield Station,Train,Exit,81450
+2024-07,Lindfield Station,Train,Entry,82194
+2024-07,Lisarow Station,Train,Exit,2710
+2024-07,Lisarow Station,Train,Entry,2998
+2024-07,Lithgow Station,Train,Exit,5421
+2024-07,Lithgow Station,Train,Entry,6017
+2024-07,Liverpool Station,Train,Exit,211142
+2024-07,Liverpool Station,Train,Entry,213178
+2024-07,Lochinvar Station,Train,Exit,Less than 50
+2024-07,Lochinvar Station,Train,Entry,Less than 50
+2024-07,Loftus Station,Train,Exit,6321
+2024-07,Loftus Station,Train,Entry,6859
+2024-07,Lysaghts Station,Train,Exit,Less than 50
+2024-07,Lysaghts Station,Train,Entry,Less than 50
+2024-07,Macarthur Station,Train,Exit,71516
+2024-07,Macarthur Station,Train,Entry,72770
+2024-07,Macdonaldtown Station,Train,Exit,24282
+2024-07,Macdonaldtown Station,Train,Entry,24550
+2024-07,Macquarie Fields Station,Train,Exit,19577
+2024-07,Macquarie Fields Station,Train,Entry,21322
+2024-07,Macquarie Park Station,Metro,Exit,83069
+2024-07,Macquarie Park Station,Metro,Entry,83136
+2024-07,Macquarie University Station,Metro,Exit,297087
+2024-07,Macquarie University Station,Metro,Entry,291572
+2024-07,Maitland Station,Train,Exit,7073
+2024-07,Maitland Station,Train,Entry,8035
+2024-07,Marayong Station,Train,Exit,23431
+2024-07,Marayong Station,Train,Entry,25554
+2024-07,Marrickville Station,Train,Exit,87937
+2024-07,Marrickville Station,Train,Entry,89818
+2024-07,Martin Place Station,Train,Exit,438709
+2024-07,Martin Place Station,Train,Entry,384465
+2024-07,Martins Creek Station,Train,Exit,Less than 50
+2024-07,Martins Creek Station,Train,Entry,Less than 50
+2024-07,Marulan Station,Train,Exit,54
+2024-07,Marulan Station,Train,Entry,68
+2024-07,Mascot Station,Train,Exit,401480
+2024-07,Mascot Station,Train,Entry,399110
+2024-07,Meadowbank Station,Train,Exit,110898
+2024-07,Meadowbank Station,Train,Entry,120921
+2024-07,Medlow Bath Station,Train,Exit,788
+2024-07,Medlow Bath Station,Train,Entry,975
+2024-07,Menangle Park Station,Train,Exit,412
+2024-07,Menangle Park Station,Train,Entry,377
+2024-07,Menangle Station,Train,Exit,323
+2024-07,Menangle Station,Train,Entry,298
+2024-07,Merrylands Station,Train,Exit,148880
+2024-07,Merrylands Station,Train,Entry,153527
+2024-07,Metford Station,Train,Exit,1049
+2024-07,Metford Station,Train,Entry,1110
+2024-07,Milsons Point Station,Train,Exit,181399
+2024-07,Milsons Point Station,Train,Entry,168038
+2024-07,Mindaribba Station,Train,Exit,Less than 50
+2024-07,Mindaribba Station,Train,Entry,Less than 50
+2024-07,Minnamurra Station,Train,Exit,1945
+2024-07,Minnamurra Station,Train,Entry,1919
+2024-07,Minto Station,Train,Exit,66348
+2024-07,Minto Station,Train,Entry,69353
+2024-07,Miranda Station,Train,Exit,89577
+2024-07,Miranda Station,Train,Entry,84430
+2024-07,Mittagong Station,Train,Exit,3586
+2024-07,Mittagong Station,Train,Entry,3986
+2024-07,Morisset Station,Train,Exit,15346
+2024-07,Morisset Station,Train,Entry,16878
+2024-07,Mortdale Station,Train,Exit,67392
+2024-07,Mortdale Station,Train,Entry,74002
+2024-07,Moss Vale Station,Train,Exit,3866
+2024-07,Moss Vale Station,Train,Entry,4173
+2024-07,Mount Colah Station,Train,Exit,11821
+2024-07,Mount Colah Station,Train,Entry,12924
+2024-07,Mount Druitt Station,Train,Exit,151714
+2024-07,Mount Druitt Station,Train,Entry,154273
+2024-07,Mount Kuring-gai Station,Train,Exit,5232
+2024-07,Mount Kuring-gai Station,Train,Entry,5362
+2024-07,Mount Victoria Station,Train,Exit,2327
+2024-07,Mount Victoria Station,Train,Entry,2353
+2024-07,Mulgrave Station,Train,Exit,6057
+2024-07,Mulgrave Station,Train,Entry,6246
+2024-07,Museum Station,Train,Exit,302475
+2024-07,Museum Station,Train,Entry,277394
+2024-07,Muswellbrook Station,Train,Exit,308
+2024-07,Muswellbrook Station,Train,Entry,462
+2024-07,Narara Station,Train,Exit,4360
+2024-07,Narara Station,Train,Entry,5161
+2024-07,Narwee Station,Train,Exit,37721
+2024-07,Narwee Station,Train,Entry,41011
+2024-07,Newcastle Interchange,Train,Exit,37213
+2024-07,Newcastle Interchange,Train,Entry,36643
+2024-07,Newtown Station,Train,Exit,271138
+2024-07,Newtown Station,Train,Entry,236935
+2024-07,Niagara Park Station,Train,Exit,2286
+2024-07,Niagara Park Station,Train,Entry,2435
+2024-07,Normanhurst Station,Train,Exit,19870
+2024-07,Normanhurst Station,Train,Entry,24300
+2024-07,North Ryde Station,Metro,Exit,65815
+2024-07,North Ryde Station,Metro,Entry,64908
+2024-07,North Strathfield Station,Train,Exit,62527
+2024-07,North Strathfield Station,Train,Entry,62769
+2024-07,North Sydney Station,Train,Exit,498329
+2024-07,North Sydney Station,Train,Entry,479477
+2024-07,North Wollongong Station,Train,Exit,23850
+2024-07,North Wollongong Station,Train,Entry,24338
+2024-07,Norwest Station,Metro,Exit,58167
+2024-07,Norwest Station,Metro,Entry,58788
+2024-07,Oak Flats Station,Train,Exit,7722
+2024-07,Oak Flats Station,Train,Entry,8511
+2024-07,Oatley Station,Train,Exit,39493
+2024-07,Oatley Station,Train,Entry,41462
+2024-07,Olympic Park Station,Train,Exit,72398
+2024-07,Olympic Park Station,Train,Entry,72384
+2024-07,Otford Station,Train,Exit,511
+2024-07,Otford Station,Train,Entry,565
+2024-07,Ourimbah Station,Train,Exit,3510
+2024-07,Ourimbah Station,Train,Entry,3700
+2024-07,Padstow Station,Train,Exit,53499
+2024-07,Padstow Station,Train,Entry,56666
+2024-07,Panania Station,Train,Exit,34296
+2024-07,Panania Station,Train,Entry,37339
+2024-07,Parramatta Station,Train,Exit,1033638
+2024-07,Parramatta Station,Train,Entry,1014114
+2024-07,Paterson Station,Train,Exit,109
+2024-07,Paterson Station,Train,Entry,136
+2024-07,Pendle Hill Station,Train,Exit,68882
+2024-07,Pendle Hill Station,Train,Entry,73056
+2024-07,Pennant Hills Station,Train,Exit,38307
+2024-07,Pennant Hills Station,Train,Entry,40128
+2024-07,Penrith Station,Train,Exit,175881
+2024-07,Penrith Station,Train,Entry,171038
+2024-07,Penrose Station,Train,Exit,Less than 50
+2024-07,Penrose Station,Train,Entry,Less than 50
+2024-07,Penshurst Station,Train,Exit,59341
+2024-07,Penshurst Station,Train,Entry,68024
+2024-07,Petersham Station,Train,Exit,76822
+2024-07,Petersham Station,Train,Entry,76998
+2024-07,Picton Station,Train,Exit,2954
+2024-07,Picton Station,Train,Entry,3372
+2024-07,Point Clare Station,Train,Exit,2977
+2024-07,Point Clare Station,Train,Entry,3560
+2024-07,Port Kembla North Station,Train,Exit,215
+2024-07,Port Kembla North Station,Train,Entry,242
+2024-07,Port Kembla Station,Train,Exit,1359
+2024-07,Port Kembla Station,Train,Entry,1579
+2024-07,Punchbowl Station,Train,Exit,49173
+2024-07,Punchbowl Station,Train,Entry,52660
+2024-07,Pymble Station,Train,Exit,40791
+2024-07,Pymble Station,Train,Entry,44023
+2024-07,Quakers Hill Station,Train,Exit,58803
+2024-07,Quakers Hill Station,Train,Entry,65034
+2024-07,Redfern Station,Train,Exit,649389
+2024-07,Redfern Station,Train,Entry,606040
+2024-07,Regents Park Station,Train,Exit,26710
+2024-07,Regents Park Station,Train,Entry,27422
+2024-07,Revesby Station,Train,Exit,106325
+2024-07,Revesby Station,Train,Entry,107635
+2024-07,Rhodes Station,Train,Exit,233975
+2024-07,Rhodes Station,Train,Entry,236260
+2024-07,Richmond Station,Train,Exit,16069
+2024-07,Richmond Station,Train,Entry,18160
+2024-07,Riverstone Station,Train,Exit,29719
+2024-07,Riverstone Station,Train,Entry,32780
+2024-07,Riverwood Station,Train,Exit,74050
+2024-07,Riverwood Station,Train,Entry,77852
+2024-07,Rockdale Station,Train,Exit,227756
+2024-07,Rockdale Station,Train,Entry,235786
+2024-07,Rooty Hill Station,Train,Exit,82553
+2024-07,Rooty Hill Station,Train,Entry,85588
+2024-07,Roseville Station,Train,Exit,55765
+2024-07,Roseville Station,Train,Entry,59683
+2024-07,Rouse Hill Station,Metro,Exit,98355
+2024-07,Rouse Hill Station,Metro,Entry,94426
+2024-07,Rydal Station,Train,Exit,Less than 50
+2024-07,Rydal Station,Train,Entry,Less than 50
+2024-07,Rydalmere Station,Train,Exit,1702
+2024-07,Rydalmere Station,Train,Entry,1585
+2024-07,Sandgate Station,Train,Exit,297
+2024-07,Sandgate Station,Train,Entry,339
+2024-07,Scarborough Station,Train,Exit,324
+2024-07,Scarborough Station,Train,Entry,220
+2024-07,Schofields Station,Train,Exit,108019
+2024-07,Schofields Station,Train,Entry,113810
+2024-07,Scone Station,Train,Exit,185
+2024-07,Scone Station,Train,Entry,244
+2024-07,Sefton Station,Train,Exit,13822
+2024-07,Sefton Station,Train,Entry,15800
+2024-07,Seven Hills Station,Train,Exit,138574
+2024-07,Seven Hills Station,Train,Entry,144426
+2024-07,Shellharbour Junction Station,Train,Exit,3443
+2024-07,Shellharbour Junction Station,Train,Entry,4027
+2024-07,Singleton Station,Train,Exit,467
+2024-07,Singleton Station,Train,Entry,506
+2024-07,Springwood Station,Train,Exit,19987
+2024-07,Springwood Station,Train,Entry,20765
+2024-07,St James Station,Train,Exit,219176
+2024-07,St James Station,Train,Entry,198883
+2024-07,St Leonards Station,Train,Exit,353798
+2024-07,St Leonards Station,Train,Entry,349818
+2024-07,St Marys Station,Train,Exit,103185
+2024-07,St Marys Station,Train,Entry,104776
+2024-07,St Peters Station,Train,Exit,72342
+2024-07,St Peters Station,Train,Entry,78109
+2024-07,Stanmore Station,Train,Exit,64985
+2024-07,Stanmore Station,Train,Entry,70263
+2024-07,Stanwell Park Station,Train,Exit,1063
+2024-07,Stanwell Park Station,Train,Entry,1062
+2024-07,Strathfield Station,Train,Exit,569453
+2024-07,Strathfield Station,Train,Entry,579656
+2024-07,Summer Hill Station,Train,Exit,74440
+2024-07,Summer Hill Station,Train,Entry,79750
+2024-07,Sutherland Station,Train,Exit,159158
+2024-07,Sutherland Station,Train,Entry,158571
+2024-07,Sydenham Station,Train,Exit,180956
+2024-07,Sydenham Station,Train,Entry,183603
+2024-07,Tahmoor Station,Train,Exit,3386
+2024-07,Tahmoor Station,Train,Entry,3685
+2024-07,Tallawong Station,Metro,Exit,113517
+2024-07,Tallawong Station,Metro,Entry,120851
+2024-07,Tallong Station,Train,Exit,Less than 50
+2024-07,Tallong Station,Train,Entry,Less than 50
+2024-07,Tarana Station,Train,Exit,77
+2024-07,Tarana Station,Train,Entry,99
+2024-07,Tarro Station,Train,Exit,103
+2024-07,Tarro Station,Train,Entry,111
+2024-07,Tascott Station,Train,Exit,1895
+2024-07,Tascott Station,Train,Entry,2425
+2024-07,Telarah Station,Train,Exit,1873
+2024-07,Telarah Station,Train,Entry,2265
+2024-07,Telopea Station,Train,Exit,2438
+2024-07,Telopea Station,Train,Entry,2840
+2024-07,Tempe Station,Train,Exit,30865
+2024-07,Tempe Station,Train,Entry,32768
+2024-07,Teralba Station,Train,Exit,1031
+2024-07,Teralba Station,Train,Entry,1169
+2024-07,Thirroul Station,Train,Exit,17912
+2024-07,Thirroul Station,Train,Entry,18912
+2024-07,Thornleigh Station,Train,Exit,34695
+2024-07,Thornleigh Station,Train,Entry,36368
+2024-07,Thornton Station,Train,Exit,4009
+2024-07,Thornton Station,Train,Entry,4752
+2024-07,Toongabbie Station,Train,Exit,64194
+2024-07,Toongabbie Station,Train,Entry,66798
+2024-07,Town Hall Station,Train,Exit,2175607
+2024-07,Town Hall Station,Train,Entry,2260034
+2024-07,Towradgi Station,Train,Exit,1162
+2024-07,Towradgi Station,Train,Entry,1427
+2024-07,Tuggerah Station,Train,Exit,25511
+2024-07,Tuggerah Station,Train,Entry,26598
+2024-07,Turramurra Station,Train,Exit,76257
+2024-07,Turramurra Station,Train,Entry,79363
+2024-07,Turrella Station,Train,Exit,24636
+2024-07,Turrella Station,Train,Entry,26958
+2024-07,Unanderra Station,Train,Exit,7335
+2024-07,Unanderra Station,Train,Entry,8495
+2024-07,Valley Heights Station,Train,Exit,1101
+2024-07,Valley Heights Station,Train,Entry,1187
+2024-07,Victoria Street Station,Train,Exit,4805
+2024-07,Victoria Street Station,Train,Entry,5238
+2024-07,Villawood Station,Train,Exit,11838
+2024-07,Villawood Station,Train,Entry,12379
+2024-07,Vineyard Station,Train,Exit,3834
+2024-07,Vineyard Station,Train,Entry,4112
+2024-07,Wahroonga Station,Train,Exit,36155
+2024-07,Wahroonga Station,Train,Entry,37559
+2024-07,Waitara Station,Train,Exit,59092
+2024-07,Waitara Station,Train,Entry,61463
+2024-07,Wallarobba Station,Train,Exit,Less than 50
+2024-07,Wallarobba Station,Train,Entry,Less than 50
+2024-07,Warabrook Station,Train,Exit,3770
+2024-07,Warabrook Station,Train,Entry,3891
+2024-07,Waratah Station,Train,Exit,3075
+2024-07,Waratah Station,Train,Entry,3406
+2024-07,Warnervale Station,Train,Exit,4870
+2024-07,Warnervale Station,Train,Entry,5570
+2024-07,Warrawee Station,Train,Exit,16164
+2024-07,Warrawee Station,Train,Entry,17288
+2024-07,Warrimoo Station,Train,Exit,2418
+2024-07,Warrimoo Station,Train,Entry,2645
+2024-07,Warwick Farm Station,Train,Exit,52592
+2024-07,Warwick Farm Station,Train,Entry,58084
+2024-07,Waterfall Station,Train,Exit,6731
+2024-07,Waterfall Station,Train,Entry,6835
+2024-07,Waverton Station,Train,Exit,42072
+2024-07,Waverton Station,Train,Entry,47382
+2024-07,Wentworth Falls Station,Train,Exit,7378
+2024-07,Wentworth Falls Station,Train,Entry,7365
+2024-07,Wentworthville Station,Train,Exit,88138
+2024-07,Wentworthville Station,Train,Entry,92435
+2024-07,Werrington Station,Train,Exit,26160
+2024-07,Werrington Station,Train,Entry,29247
+2024-07,West Ryde Station,Train,Exit,111179
+2024-07,West Ryde Station,Train,Entry,112055
+2024-07,Westmead Station,Train,Exit,153824
+2024-07,Westmead Station,Train,Entry,164535
+2024-07,Wiley Park Station,Train,Exit,31701
+2024-07,Wiley Park Station,Train,Entry,37069
+2024-07,Windsor Station,Train,Exit,16940
+2024-07,Windsor Station,Train,Entry,17321
+2024-07,Wingello Station,Train,Exit,Less than 50
+2024-07,Wingello Station,Train,Entry,58
+2024-07,Wirragulla Station,Train,Exit,Less than 50
+2024-07,Wirragulla Station,Train,Entry,Less than 50
+2024-07,Wolli Creek Station,Train,Exit,230563
+2024-07,Wolli Creek Station,Train,Entry,229645
+2024-07,Wollongong Station,Train,Exit,36976
+2024-07,Wollongong Station,Train,Entry,37410
+2024-07,Wollstonecraft Station,Train,Exit,48881
+2024-07,Wollstonecraft Station,Train,Entry,53195
+2024-07,Wombarra Station,Train,Exit,365
+2024-07,Wombarra Station,Train,Entry,455
+2024-07,Wondabyne Station,Train,Exit,412
+2024-07,Wondabyne Station,Train,Entry,355
+2024-07,Woodford Station,Train,Exit,1431
+2024-07,Woodford Station,Train,Entry,1579
+2024-07,Woolooware Station,Train,Exit,25343
+2024-07,Woolooware Station,Train,Entry,26552
+2024-07,Woonona Station,Train,Exit,1941
+2024-07,Woonona Station,Train,Entry,2346
+2024-07,Woy Woy Station,Train,Exit,79310
+2024-07,Woy Woy Station,Train,Entry,78671
+2024-07,Wyee Station,Train,Exit,5129
+2024-07,Wyee Station,Train,Entry,5949
+2024-07,Wynyard Station,Train,Exit,1594634
+2024-07,Wynyard Station,Train,Entry,1501778
+2024-07,Wyong Station,Train,Exit,28142
+2024-07,Wyong Station,Train,Entry,29654
+2024-07,Yagoona Station,Train,Exit,28683
+2024-07,Yagoona Station,Train,Entry,32392
+2024-07,Yennora Station,Train,Exit,27426
+2024-07,Yennora Station,Train,Entry,27273
+2024-07,Yerrinbool Station,Train,Exit,331
+2024-07,Yerrinbool Station,Train,Entry,442
+2024-07,Zig Zag Station,Train,Exit,Less than 50
+2024-07,Zig Zag Station,Train,Entry,Less than 50
