@@ -1,1 +1,3 @@
-trip_origin_date|mode_name|ti_region|tap_hour|Tap_Ons|Tap_Offs
+version https://git-lfs.github.com/spec/v1
+oid sha256:66b34ede27a42a3514fa6ce47a6793c8bee0d80cf14570025be44576b92881aa
+size 63
