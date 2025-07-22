@@ -53,6 +53,8 @@ unique(filter(data, mode_name == "Light rail")$ti_region)
 
 Combining all of the .txt files into one big .txt file
 
+(DONT RUN) \~ FILE IS ALREADY CREATED
+
 ```{r}
 library(dplyr)
 
@@ -345,4 +347,554 @@ big_data %>%
   theme(
     strip.text = element_text(size = 8)  # smaller facet labels if many regions
   )
+```
+
+Greater Sydney Map
+
+<https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files>
+
+```{r}
+library(sf)
+library(dplyr)
+library(ggplot2)
+
+# Load shapefile (make sure all shapefile files are in the folder)
+sa2 <- st_read("data/sydney_map/")
+
+# Filter Greater Sydney districts
+sydney_sa2 <- sa2 %>% filter(GCC_NAME21 == "Greater Sydney")
+
+# Plot the Greater Sydney SA2 map
+ggplot(sydney_sa2) +
+  geom_sf(fill = "lightblue", color = "black", size = 0.3) +
+  labs(title = "Greater Sydney Districts (SA2 Level)") +
+  theme_minimal()
+
+
+```
+
+heme_minimal()
+
+```{r}
+library(sf)
+library(ggplot2)
+
+sa2 <- st_read("data/sydney_map/")
+
+# Define bounding box (xmin, ymin, xmax, ymax) - coordinates roughly around Sydney metro area
+bbox <- st_bbox(c(xmin = 150.9, ymin = -33.9, xmax = 151.3, ymax = -33.8), crs = st_crs(sa2))
+
+# Crop polygons to bounding box
+focus_area <- st_crop(sa2, bbox)
+
+ggplot(focus_area) +
+  geom_sf(fill = "lightblue", color = "black", size = 0.3) +
+  labs(title = "Zoomed Map Near Central Sydney") +
+  theme_minimal()
+
+```
+
+```{r}
+library(sf)
+library(dplyr)
+library(ggplot2)
+
+# Load SA2 shapefile
+sa2 <- st_read("data/sydney_map/")
+
+# Define the exact SA2 districts you want to zoom into
+target_sa2 <- c("Sydney - Central", "North Sydney", "Parramatta", "Strathfield")
+
+# Filter only those districts
+focus_sa2 <- sa2 %>% filter(SA2_NAME21 %in% target_sa2)
+
+# Join your Opal tap-ons data (make sure daily_totals_by_region exists)
+sa2_opal_focus <- focus_sa2 %>%
+  left_join(daily_totals_by_region, by = c("SA2_NAME21" = "ti_region"))
+
+# Plot zoomed-in map
+ggplot(sa2_opal_focus) +
+  geom_sf(aes(fill = Total_Tap_Ons), color = "black", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    fill = "Total Tap-Ons",
+    title = "Opal Tap-Ons Near Sydney Central and Neighbours",
+    caption = "Data source: Opal Patronage & ABS"
+  ) +
+  theme_minimal()
+
+unique(sa2$SA2_NAME21)
+
+
+```
+
+Using SA3 data because SA2 might be too detailed
+
+```{r}
+library(sf)
+library(dplyr)
+library(ggplot2)
+
+# Load SA3 shapefile
+sa3 <- st_read("data/sa3/SA3_2021_AUST_GDA2020.shp")
+
+# Filter for Greater Sydney only
+sydney_sa3 <- sa3 %>% filter(GCC_NAME21 == "Greater Sydney")
+
+# Join Opal tap-ons data by matching district names
+sa3_opal <- sydney_sa3 %>%
+  left_join(daily_totals_by_region, by = c("SA3_NAME21" = "ti_region"))
+
+# Plot choropleth map zoomed on Greater Sydney SA3 regions
+ggplot(sa3_opal) +
+  geom_sf(aes(fill = Total_Tap_Ons), color = "black", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    fill = "Total Tap-Ons",
+    title = "Opal Train Tap-Ons in Greater Sydney (SA3 Districts)",
+    caption = "Data source: Opal Patronage & ABS"
+  ) +
+  theme_minimal()
+
+```
+
+Zooming in on specific districts
+
+```{r}
+library(sf)
+library(dplyr)
+library(ggplot2)
+
+# Load SA3 shapefile
+sa3 <- st_read("data/sa3/SA3_2021_AUST_GDA2020.shp")
+
+# Define bounding box near Sydney CBD (adjust these coordinates as needed)
+bbox <- st_bbox(c(xmin = 150.95, ymin = -34.05, xmax = 151.15, ymax = -33.80), crs = st_crs(sa3))
+
+# Crop SA3 polygons to this bbox
+cropped_sa3 <- st_crop(sa3, bbox)
+
+# Join Opal tap-ons data (assuming daily_totals_by_region has matching SA3_NAME21 in ti_region)
+cropped_sa3_opal <- cropped_sa3 %>%
+  left_join(daily_totals_by_region, by = c("SA3_NAME21" = "ti_region"))
+
+# Plot cropped map
+ggplot(cropped_sa3_opal) +
+  geom_sf(aes(fill = Total_Tap_Ons), color = "black", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    fill = "Total Tap-Ons",
+    title = "Opal Tap-Ons near Sydney CBD (custom bbox)",
+    caption = "Data source: Opal Patronage & ABS"
+  ) +
+  theme_minimal()
+
+```
+
+Checking SA2 district names
+
+```{r}
+# Extract unique district names
+district_names <- unique(sa2$SA2_NAME21)
+
+# Optionally sort them
+district_names <- sort(district_names)
+
+# Write to a text file, one name per line
+writeLines(district_names, "district_names_sa2.txt")
+
+
+```
+
+```{r}
+library(sf)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+
+# Your lookup table for Sydney SA2 -> Sydney Region
+sydney_sa2_regions <- data.frame(
+  SA2_NAME = c(
+    "Darlinghurst", "Docklands", "Potts Point - Woolloomooloo", "Pyrmont",
+    "Sydney (North) - Millers Point", "Sydney (South) - Haymarket",
+    "Parramatta - North", "Parramatta - South", "Cremorne - Cammeray",
+    "Crows Nest - Waverton", "Greenwich - Riverview", "Neutral Bay - Kirribilli",
+    "North Sydney - Lavender Bay", "St Leonards - Naremburn", "Waverley - St Leonards",
+    "Macquarie Park - Marsfield", "Strathfield - East", "Strathfield - West",
+    "Strathfield South", "Artarmon", "Chatswood - East", "Chatswood (West) - Lane Cove North",
+    "Lane Cove", "North Ryde - East Ryde", "Ryde - North", "Ryde - South",
+    "West Ryde - Meadowbank"
+  ),
+  Sydney_Region = c(
+    "Sydney CBD", "Sydney CBD", "Sydney CBD", "Sydney CBD", "Sydney CBD", "Sydney CBD",
+    "Parramatta", "Parramatta", "North Sydney", "North Sydney", "North Sydney", "North Sydney",
+    "North Sydney", "North Sydney", "North Sydney", "Macquarie Park",
+    "Strathfield", "Strathfield", "Strathfield", "Chatswood", "Chatswood", "Chatswood",
+    "Chatswood", "Chatswood", "Chatswood", "Chatswood", "Chatswood"
+  ),
+  stringsAsFactors = FALSE
+)
+
+# Helper function to clean names (lowercase, remove spaces and dashes)
+clean_name <- function(x) {
+  tolower(str_replace_all(x, "[- ()]", ""))
+}
+
+# Load SA2 shapefile (adjust path if needed)
+sa2 <- st_read("data/sydney_map/SA2_2021_AUST_GDA2020.shp")
+
+# Add cleaned name columns for matching
+sa2 <- sa2 %>% mutate(clean_name = clean_name(SA2_NAME21))
+sydney_sa2_regions <- sydney_sa2_regions %>% mutate(clean_name = clean_name(SA2_NAME))
+
+# Filter SA2 polygons matching your Sydney SA2 names using cleaned names
+sa2_sydney_regions <- sa2 %>%
+  filter(clean_name %in% sydney_sa2_regions$clean_name) %>%
+  left_join(sydney_sa2_regions, by = "clean_name")
+
+# Dissolve polygons by Sydney_Region (union geometries)
+sydney_region_polygons <- sa2_sydney_regions %>%
+  group_by(Sydney_Region) %>%
+  summarise(geometry = st_union(geometry)) %>%
+  ungroup()
+
+# Join Sydney_Region info to your Opal tap-ons data (assumed dataframe: daily_totals_by_region)
+daily_totals_with_region <- daily_totals_by_region %>%
+  left_join(sydney_sa2_regions %>% select(SA2_NAME, Sydney_Region), by = c("ti_region" = "SA2_NAME"))
+
+# Aggregate Opal tap-ons by Sydney_Region for Trains only
+daily_totals_by_sydney_region <- daily_totals_with_region %>%
+  filter(mode_name == "Train") %>%
+  group_by(Sydney_Region) %>%
+  summarise(Total_Tap_Ons = sum(Total_Tap_Ons, na.rm = TRUE),
+            Total_Tap_Offs = sum(Total_Tap_Offs, na.rm = TRUE),
+            .groups = "drop")
+
+# Join aggregated tap-ons to Sydney region polygons
+sydney_map_data <- sydney_region_polygons %>%
+  left_join(daily_totals_by_sydney_region, by = "Sydney_Region")
+
+# Plot gradient map of Opal Train Tap-Ons by Sydney Region
+ggplot(sydney_map_data) +
+  geom_sf(aes(fill = Total_Tap_Ons), color = "black", size = 0.3) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    fill = "Total Tap-Ons",
+    title = "Opal Train Tap-Ons by Sydney Region",
+    caption = "Data source: Opal Patronage & ABS"
+  ) +
+  theme_minimal()
+
+
+
+```
+
+```{r}
+# Load libraries
+library(sf)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(readr)
+
+# Step 1: Read SA2 map shapefile
+sa2 <- st_read("data/sydney_map/SA2_2021_AUST_GDA2020.shp")
+
+# Step 2: Read train entry/exit data from your single CSV file
+entry_exit_data <- read_csv("data/train_data_entry_exit/aug2024_may2025.csv")
+
+# Step 3: Clean up station names and filter for train entries
+stations_to_ignore <- c("Rosehill", "Camellia", "Rydalmere", "Dundas", "Telopea", "Carlingford")
+
+entry_exit_data <- entry_exit_data %>%
+  filter(Station_Type %in% c("train", "Metro Shared")) %>%
+  mutate(Train_Station = gsub(" Station", "", Station),
+         Train_Station = trimws(Train_Station)) %>%
+  filter(!Train_Station %in% stations_to_ignore,
+         Entry_Exit == "Entry") %>%
+  mutate(Trip = ifelse(Trip == "Less than 50", "50", Trip),
+         Trip = as.numeric(Trip))
+
+# Step 4: Summarize total entries per station
+station_summary <- entry_exit_data %>%
+  group_by(Train_Station) %>%
+  summarise(Total_Entries = sum(Trip, na.rm = TRUE))
+
+# Step 5: Load station coordinates
+station_locations <- read_csv("data/TrainStationEntranceLocations/stationentrances2020_v4.csv")
+
+# Filter to only stations in data and join coordinates
+stations <- station_locations %>%
+  filter(!duplicated(Train_Station)) %>%
+  inner_join(station_summary, by = "Train_Station") %>%
+  drop_na(LONG, LAT)
+
+# Convert to sf object
+stations_sf <- st_as_sf(stations, coords = c("LONG", "LAT"), crs = 4326)
+
+# New bbox for tighter zoom (e.g. Sydney CBD)
+bbox <- st_bbox(c(xmin = 151.1, ymin = -33.92, xmax = 151.25, ymax = -33.81), crs = st_crs(sa2))
+sa2_cropped <- st_crop(sa2, bbox)
+
+# Plot with better colouring
+ggplot() +
+  geom_sf(data = sa2_cropped, fill = "grey80", color = "grey40") +
+  geom_sf(data = stations_sf, aes(size = Total_Entries, color = Total_Entries), alpha = 0.8) +
+  scale_color_viridis_c(option = "plasma", name = "Total Entries") +
+  scale_size_continuous(range = c(1, 8)) +
+  coord_sf(xlim = c(151.1, 151.25), ylim = c(-33.92, -33.81)) +
+  labs(
+    title = "Train Station Entries Overlaid on SA2 Map",
+    subtitle = "Zoomed: Sydney CBD (Aug 2024 – May 2025)",
+    caption = "Data: NSW Train Stations + ABS SA2"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+
+```
+
+```{r}
+library(sf)
+library(dplyr)
+library(readr)
+library(ggplot2)
+
+# --- Step 1: Load SA2 shapefile ---
+sa2 <- st_read("data/sydney_map/SA2_2021_AUST_GDA2020.shp")
+
+# --- Step 2: Load population density data ---
+pop_density_data <- read_csv("data/sa2_pop.csv")  # Replace with your CSV path
+
+# --- Step 3: Join population density to SA2 ---
+sa2_pop <- sa2 %>%
+  left_join(pop_density_data, by = c("SA2_NAME21" = "sa2_name"))
+
+# --- Step 4: Load train entry/exit data ---
+entry_exit_data <- read_csv("data/train_data_entry_exit/aug2024_may2025.csv")
+
+# Stations to ignore (optional)
+stations_to_ignore <- c("Rosehill", "Camellia", "Rydalmere", "Dundas", "Telopea", "Carlingford")
+
+# Clean and filter train data
+entry_exit_data <- entry_exit_data %>%
+  filter(Station_Type %in% c("train", "Metro Shared")) %>%
+  mutate(Train_Station = gsub(" Station", "", Station),
+         Train_Station = trimws(Train_Station)) %>%
+  filter(!Train_Station %in% stations_to_ignore,
+         Entry_Exit == "Entry") %>%
+  mutate(Trip = ifelse(Trip == "Less than 50", "50", Trip),
+         Trip = as.numeric(Trip))
+
+# Summarize total entries per station
+station_summary <- entry_exit_data %>%
+  group_by(Train_Station) %>%
+  summarise(Total_Entries = sum(Trip, na.rm = TRUE))
+
+# Load station locations
+station_locations <- read_csv("data/TrainStationEntranceLocations/stationentrances2020_v4.csv")
+
+# Filter & join coordinates for stations
+stations <- station_locations %>%
+  filter(!duplicated(Train_Station)) %>%
+  inner_join(station_summary, by = "Train_Station") %>%
+  filter(!is.na(LONG) & !is.na(LAT))
+
+# Convert station data to sf object
+stations_sf <- st_as_sf(stations, coords = c("LONG", "LAT"), crs = 4326)
+
+# New bbox for tighter zoom (e.g. Sydney CBD)
+bbox <- st_bbox(c(xmin = 151.1, ymin = -33.92, xmax = 151.25, ymax = -33.81), crs = st_crs(sa2))
+sa2_cropped <- st_crop(sa2, bbox)
+
+# Crop SA2 polygons to bounding box
+sa2_cropped <- st_crop(sa2_pop, bbox)
+
+# --- Step 6: Plot combined map ---
+ggplot() +
+  geom_sf(data = sa2_cropped, aes(fill = pop_density), color = "white", size = 0.1) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90", name = "Population Density") +
+  geom_sf(data = stations_sf, aes(size = Total_Entries, color = Total_Entries), alpha = 0.8) +
+  scale_color_viridis_c(option = "magma", name = "Train Entries") +
+  scale_size_continuous(range = c(1, 8)) +
+  coord_sf(xlim = c(bbox["xmin"], bbox["xmax"]), ylim = c(bbox["ymin"], bbox["ymax"])) +
+  labs(
+    title = "Population Density and Train Station Entries in Sydney SA2 Districts",
+    subtitle = "Population density by district with train entries overlay",
+    caption = "Data: Your CSV, NSW Train Stations & ABS SA2"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
+
+```{r}
+# Load required libraries
+library(sf)
+library(dplyr)
+library(readr)
+library(ggplot2)
+
+# --- Step 1: Load SA2 shapefile ---
+sa2 <- st_read("data/sydney_map/SA2_2021_AUST_GDA2020.shp")
+
+# --- Step 2: Load population density data ---
+pop_density_data <- read_csv("data/sa2_pop.csv")  # Replace with your actual path
+
+# --- Step 3: Join population density to SA2 ---
+sa2_pop <- sa2 %>%
+  left_join(pop_density_data, by = c("SA2_NAME21" = "sa2_name"))
+
+# --- Step 4: Load train entry/exit data ---
+entry_exit_data <- read_csv("data/train_data_entry_exit/aug2024_may2025.csv")
+
+# Filter only train stations and clean names
+stations_to_ignore <- c("Rosehill", "Camellia", "Rydalmere", "Dundas", "Telopea", "Carlingford")
+entry_exit_data <- entry_exit_data %>%
+  filter(Station_Type %in% c("train", "Metro Shared")) %>%
+  mutate(Train_Station = gsub(" Station", "", Station),
+         Train_Station = trimws(Train_Station)) %>%
+  filter(!Train_Station %in% stations_to_ignore,
+         Entry_Exit == "Entry") %>%
+  mutate(Trip = ifelse(Trip == "Less than 50", "50", Trip),
+         Trip = as.numeric(Trip))
+
+# Summarize total entries per station
+station_summary <- entry_exit_data %>%
+  group_by(Train_Station) %>%
+  summarise(Total_Entries = sum(Trip, na.rm = TRUE))
+
+# --- Step 5: Load station locations ---
+station_locations <- read_csv("data/TrainStationEntranceLocations/stationentrances2020_v4.csv")
+
+# Merge with summary data
+stations <- station_locations %>%
+  filter(!duplicated(Train_Station)) %>%
+  inner_join(station_summary, by = "Train_Station") %>%
+  filter(!is.na(LONG) & !is.na(LAT))
+
+# Convert to sf object
+stations_sf <- st_as_sf(stations, coords = c("LONG", "LAT"), crs = 4326)
+
+# --- Step 6: Load train line shapefile (must be LINESTRING format) ---
+train_lines <- st_read("data/SydneyTrainRoutes/sydneytrains/SydneyTrains.shp")  # Replace with your actual path
+
+# --- Step 7: Transform all spatial objects to same CRS (WGS84) ---
+sa2_pop <- st_transform(sa2_pop, crs = 4326)
+stations_sf <- st_transform(stations_sf, crs = 4326)
+train_lines <- st_transform(train_lines, crs = 4326)
+
+# --- Step 8: Crop all spatial data to Sydney CBD bbox ---
+bbox <- st_bbox(c(xmin = 151.1, ymin = -33.92, xmax = 151.25, ymax = -33.81), crs = st_crs(4326))
+sa2_cropped <- st_crop(sa2_pop, bbox)
+stations_cropped <- st_crop(stations_sf, bbox)
+train_lines_cropped <- st_crop(train_lines, bbox)
+
+# --- Step 9: Plot combined map ---
+ggplot() +
+  geom_sf(data = sa2_cropped, aes(fill = pop_density), color = "white", size = 0.1) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90", name = "Population Density") +
+
+  geom_sf(data = train_lines_cropped, color = "red", size = 1, alpha = 0.6) +
+
+  geom_sf(data = stations_cropped, aes(size = Total_Entries, color = Total_Entries), alpha = 0.9) +
+  scale_color_viridis_c(option = "magma", name = "Train Entries") +
+  scale_size_continuous(range = c(1, 8)) +
+
+  coord_sf(xlim = c(bbox["xmin"], bbox["xmax"]), ylim = c(bbox["ymin"], bbox["ymax"])) +
+  labs(
+    title = "Population Density and Train Station Entries in Sydney SA2 Districts",
+    subtitle = "SA2 gradient by population density, with red train lines and entry volume at stations",
+    caption = "Data: ABS SA2 2021, Opal Patronage 2024–2025, Station Entrances"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+
+```
+
+```{r}
+library(sf)
+library(dplyr)
+library(readr)
+library(ggplot2)
+
+# Step 1: Load SA2 shapefile
+sa2 <- st_read("data/sydney_map/SA2_2021_AUST_GDA2020.shp")
+
+# Step 2: Load population density CSV
+pop_density_data <- read_csv("data/sa2_pop.csv")
+
+# Step 3: Join population density data to SA2
+sa2_pop <- sa2 %>%
+  left_join(pop_density_data, by = c("SA2_NAME21" = "sa2_name"))
+
+# Step 4: Load train entry/exit data
+entry_exit_data <- read_csv("data/train_data_entry_exit/aug2024_may2025.csv")
+
+stations_to_ignore <- c("Rosehill", "Camellia", "Rydalmere", "Dundas", "Telopea", "Carlingford")
+
+entry_exit_data <- entry_exit_data %>%
+  filter(Station_Type %in% c("train", "Metro Shared")) %>%
+  mutate(Train_Station = gsub(" Station", "", Station),
+         Train_Station = trimws(Train_Station)) %>%
+  filter(!Train_Station %in% stations_to_ignore,
+         Entry_Exit == "Entry") %>%
+  mutate(Trip = ifelse(Trip == "Less than 50", "50", Trip),
+         Trip = as.numeric(Trip))
+
+station_summary <- entry_exit_data %>%
+  group_by(Train_Station) %>%
+  summarise(Total_Entries = sum(Trip, na.rm = TRUE))
+
+# Step 5: Load station locations
+station_locations <- read_csv("data/TrainStationEntranceLocations/stationentrances2020_v4.csv")
+
+stations <- station_locations %>%
+  filter(!duplicated(Train_Station)) %>%
+  inner_join(station_summary, by = "Train_Station") %>%
+  filter(!is.na(LONG) & !is.na(LAT))
+
+stations_sf <- st_as_sf(stations, coords = c("LONG", "LAT"), crs = 4326)
+
+# Step 6: Load train line shapefile (Projected CRS)
+train_lines <- st_read("data/SydneyTrainRoutes/sydneytrains/SydneyTrains.shp")
+
+# Step 7: Transform all spatial data to EPSG:4326 (WGS84)
+sa2_pop <- st_transform(sa2_pop, 4326)
+stations_sf <- st_transform(stations_sf, 4326)
+train_lines <- st_transform(train_lines, 4326)
+
+# Step 8: Define bounding box (larger than before to capture lines)
+bbox <- st_bbox(c(xmin = 150.90, ymin = -34.10, xmax = 151.30, ymax = -33.70), crs = st_crs(4326))
+
+# Convert bbox to simple feature polygon for intersection filtering
+bbox_sf <- st_as_sfc(bbox)
+
+# Filter features that intersect bounding box to avoid clipping lines partially
+sa2_cropped <- st_crop(sa2_pop, bbox)
+stations_cropped <- st_crop(stations_sf, bbox)
+train_lines_cropped <- train_lines %>% filter(st_intersects(., bbox_sf, sparse = FALSE))
+
+# Step 9: Plot
+ggplot() +
+  geom_sf(data = sa2_cropped, aes(fill = pop_density), color = "white", size = 0.1) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90", name = "Population Density") +
+
+  geom_sf(data = train_lines_cropped, color = "red", size = 1, alpha = 0.6) +
+
+  geom_sf(data = stations_cropped, aes(size = Total_Entries, color = Total_Entries), alpha = 0.9) +
+  scale_color_viridis_c(option = "magma", name = "Train Entries") +
+  scale_size_continuous(range = c(1, 8)) +
+
+  coord_sf(xlim = c(bbox["xmin"], bbox["xmax"]), ylim = c(bbox["ymin"], bbox["ymax"])) +
+
+  labs(
+    title = "Population Density and Train Station Entries in Sydney SA2 Districts",
+    subtitle = "SA2 gradient by population density, with red train lines and entry volume at stations",
+    caption = "Data: ABS SA2 2021, Opal Patronage 2024–2025, Station Entrances"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
 ```
