@@ -176,7 +176,7 @@ filter(rain, Year >= 2020)
 
 ```
 
-Merging the Opal Patronage and rainfall datasets into one
+Merging the Opal Patronage and rainfall datasets into one [1]
 
 ```{r}
 library(dplyr)
@@ -227,9 +227,241 @@ summary(big_data$Rainfall_amount)
 
 ```
 
+[2]
+
+```{r}
+library(dplyr)
+library(readr)
+library(lubridate)
+
+# --- 1. Load and combine rainfall data ---
+rainfall_folder <- "data/rainfall"
+rainfall_files <- list.files(rainfall_folder, pattern = "\\.csv$", full.names = TRUE)
+
+rainfall_list <- lapply(rainfall_files, function(file) {
+  region <- tools::file_path_sans_ext(basename(file))
+  
+  df <- read_csv(file, show_col_types = FALSE)
+  
+  df <- df %>%
+    mutate(
+      # keep ti_region as filename lowercase + trimmed (with underscores)
+      ti_region = tolower(trimws(region)),
+      date = as.Date(paste(Year, Month, Day, sep = "-"))
+    ) %>%
+    select(ti_region, date, Rainfall_amount = `Rainfall amount (millimetres)`)
+  
+  return(df)
+})
+
+rainfall_data <- bind_rows(rainfall_list)
+
+# --- 2. Prepare Opal data ---
+daily_totals_by_region <- daily_totals_by_region %>%
+  mutate(
+    ti_region = tolower(trimws(ti_region)),
+    ti_region = gsub(" ", "_", ti_region),
+    trip_origin_date = as.Date(trip_origin_date)
+  )
+
+# --- 3. Join rainfall data with Opal data ---
+big_data <- daily_totals_by_region %>%
+  left_join(rainfall_data, by = c("ti_region", "trip_origin_date" = "date"))
+
+# --- 4. Diagnose missing rainfall data for macquarie_park ---
+cat("Regions in big_data but not in rainfall_data:\n")
+print(setdiff(unique(big_data$ti_region), unique(rainfall_data$ti_region)))
+
+cat("Regions in rainfall_data but not in big_data:\n")
+print(setdiff(unique(rainfall_data$ti_region), unique(big_data$ti_region)))
+
+macquarie_rainfall_check <- rainfall_data %>%
+  filter(ti_region == "macquarie_park") %>%
+  arrange(date)
+
+cat("Summary of rainfall data for macquarie_park:\n")
+print(summary(macquarie_rainfall_check$Rainfall_amount))
+
+missing_rainfall_dates <- big_data %>%
+  filter(ti_region == "macquarie_park", is.na(Rainfall_amount)) %>%
+  select(trip_origin_date)
+
+cat("Dates with missing rainfall data for macquarie_park:\n")
+print(missing_rainfall_dates)
+
+# --- 5. Fix missing rainfall by replacing NA with 0 ---
+big_data <- big_data %>%
+  mutate(Rainfall_amount = ifelse(is.na(Rainfall_amount), 0, Rainfall_amount))
+
+# Now big_data is ready for analysis and plotting with missing rainfall handled.
+
+```
+
 ```{r}
 unique(filter(big_data, mode_name == "Train")$ti_region)
+
+
 ```
+
+```{r}
+rainfall_data %>%
+  filter(ti_region == "sydney_cbd") %>%
+  summarise(
+    start = min(date),
+    end = max(date),
+    n = n()
+  )
+
+
+```
+
+# Weekly Data
+
+Trying to make the data set into weekly data set
+
+```{r}
+library(dplyr)
+library(lubridate)
+
+# Define your custom week start as 1 Jan 2020
+start_date <- as.Date("2020-01-01")
+
+big_data_weekly <- big_data %>%
+  mutate(
+    week_start = start_date + 7 * ((as.numeric(trip_origin_date - start_date)) %/% 7)
+  ) %>%
+  group_by(week_start, mode_name, ti_region) %>%
+  summarise(
+    Weekly_Tap_Ons = sum(Total_Tap_Ons, na.rm = TRUE),
+    Weekly_Tap_Offs = sum(Total_Tap_Offs, na.rm = TRUE),
+    Weekly_Rainfall = sum(Rainfall_amount, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+big_data_weekly %>%
+  filter(tolower(mode_name) == "train") %>%
+  ggplot(aes(x = Weekly_Rainfall, y = Weekly_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "blue") +
+  facet_wrap(~ ti_region, scales = "free") +
+  labs(
+    title = "Weekly Train Tap-Ons vs Rainfall by Region",
+    x = "Weekly Rainfall (mm)",
+    y = "Weekly Opal Tap-Ons"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 8)
+  )
+
+```
+
+For 2020
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)  # for year()
+
+big_data_weekly %>%
+  filter(
+    tolower(mode_name) == "train",
+    year(week_start) == 2022
+  ) %>%
+  ggplot(aes(x = Weekly_Rainfall, y = Weekly_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "blue") +
+  facet_wrap(~ ti_region, scales = "free") +
+  labs(
+    title = "Weekly Train Tap-Ons vs Rainfall by Region (2020)",
+    x = "Weekly Rainfall (mm)",
+    y = "Weekly Opal Tap-Ons"
+  ) +
+  theme_minimal() +
+  theme(strip.text = element_text(size = 8))
+
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+year <- 2022
+
+# 1. Prepare the data
+filtered_data <- big_data_weekly %>%
+  filter(
+    tolower(mode_name) == "bus",
+    year(week_start) == year
+  ) %>%
+  mutate(Region = tools::toTitleCase(gsub("_", " ", ti_region))) %>%
+  mutate(
+    Region = case_when(
+      Region == "Sydney Cbd" ~ "Sydney CBD",
+      Region == "Cbd" ~ "CBD",
+      TRUE ~ Region
+    )
+  )
+
+# 2. Calculate correlation per region
+correlations <- filtered_data %>%
+  group_by(Region) %>%
+  summarise(
+    r = round(cor(Weekly_Rainfall, Weekly_Tap_Ons, use = "complete.obs"), 2),
+    .groups = "drop"
+  )
+
+# 3. Join correlation into main data
+plot_data <- filtered_data %>%
+  left_join(correlations, by = "Region") %>%
+  mutate(label = paste0("r = ", r))
+
+# 4. Smart label placement - a bit to the right
+label_positions <- plot_data %>%
+  group_by(Region) %>%
+  summarise(
+    x_min = min(Weekly_Rainfall, na.rm = TRUE),
+    x_max = max(Weekly_Rainfall, na.rm = TRUE),
+    y_max = max(Weekly_Tap_Ons, na.rm = TRUE),
+    label = unique(label),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    x = x_min + 0.8 * (x_max - x_min),  # Move 15% right from min
+    y = y_max * 0.95
+  )
+
+# 5. Plot
+ggplot(plot_data, aes(x = Weekly_Rainfall, y = Weekly_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  facet_wrap(~ Region, scales = "free") +
+  geom_text(
+    data = label_positions,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    size = 4, fontface = "bold", color = "black", hjust = 0
+  ) +
+  labs(
+    title = paste0("Weekly Bus Tap-Ons vs Rainfall by Region (", year, ")"),
+    x = "Weekly Rainfall (mm)",
+    y = "Weekly Opal Tap-Ons"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    strip.text = element_text(size = 9, face = "bold"),
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold")
+  )
+
+```
+
+# Daily Data
 
 Plotting tap ins vs rainfall
 
@@ -792,7 +1024,7 @@ train_lines_cropped <- st_crop(train_lines, bbox)
 
 # --- Step 9: Plot combined map ---
 ggplot() +
-  geom_sf(data = sa2_cropped, aes(fill = pop_density), color = "white", size = 0.1) +
+  geom_sf(data = sa2_cropped, aes(fill = pop_density), color = "white", size = 0.5) +
   scale_fill_viridis_c(option = "plasma", na.value = "grey90", name = "Population Density") +
 
   geom_sf(data = train_lines_cropped, color = "red", size = 1, alpha = 0.6) +
