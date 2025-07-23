@@ -1,0 +1,393 @@
+# Factors Affecting Public Transport by Suburb in NSW
+
+## Winter Data Analysis Challenge 2025
+
+### By Vanessa Huang & Aisyi Sophian
+
+#### Data Wrangling
+
+Combining the Opal Patronage Tap-Ons data by Transport for NSW with the Rainfall data provided by the NSW Bureau of Meteorology (BOM) into a weekly-based data set.
+
+Opal Patronage: <https://opendata.transport.nsw.gov.au/data/dataset/opal-patronage>\
+BOM Weather: <http://www.bom.gov.au/climate/data/index.shtml>
+
+```{r}
+#| message: false
+#| warning: false
+#| results: 'hide'
+
+library(dplyr)
+library(readr)
+library(lubridate)
+
+folder_path <- "data/opal_patronage"
+file_list <- list.files(path = folder_path, pattern = "\\.txt$", full.names = TRUE)
+
+# Defining the column names
+col_names <- c("trip_origin_date", "mode_name", "ti_region", "tap_hour", "Tap_Ons", "Tap_Offs")
+
+# Reading the file folder containing these daily Opal Patronage data.
+read_clean_file <- function(file, skip_header = FALSE) {
+  lines <- readLines(file, warn = FALSE)
+  
+  if (length(lines) < 2) return(NULL)  
+  
+  if (skip_header) {
+    lines <- lines[-1]
+  }
+  
+  good_lines <- lines[sapply(lines, function(line) length(strsplit(line, "\\|")[[1]]) == 6)]
+  
+  if (length(good_lines) == 0) return(NULL)
+  
+  df <- read.table(text = good_lines, sep = "|", header = FALSE, stringsAsFactors = FALSE, colClasses = "character")
+  colnames(df) <- col_names
+  return(df)
+}
+
+combined_data <- read_clean_file(file_list[1], skip_header = FALSE)
+
+for (file in file_list[-1]) {
+  df <- read_clean_file(file, skip_header = TRUE)
+  if (!is.null(df)) {
+    combined_data <- bind_rows(combined_data, df)
+  }
+}
+
+# Writing the combined data into a single large .txt file.
+write.table(combined_data,
+            file = "data/opal_patronage/Opal_Patronage_Combined.txt",
+            sep = "|",
+            row.names = FALSE,
+            col.names = TRUE,
+            quote = FALSE)
+
+filtered_data <- combined_data[combined_data$ti_region %in% c("Parramatta", "Chatswood", "Macquarie Park", "North Sydney", "Strathfield", "Sydney CBD"), ]
+
+# Replacing "<50" with NA, then convert Tap_Ons and Tap_Offs to numeric
+filtered_data$Tap_Ons <- as.numeric(gsub("<50", NA, filtered_data$Tap_Ons))
+filtered_data$Tap_Offs <- as.numeric(gsub("<50", NA, filtered_data$Tap_Offs))
+
+# Removing rows with NA values in Tap_Ons or Tap_Offs
+filtered_data <- filtered_data[!is.na(filtered_data$Tap_Ons) & !is.na(filtered_data$Tap_Offs), ]
+
+# Aggregating sums by trip_origin_date, mode_name, and ti_region
+daily_totals_by_region <- aggregate(
+  cbind(Tap_Ons, Tap_Offs) ~ trip_origin_date + mode_name + ti_region,
+  data = filtered_data,
+  FUN = sum
+)
+
+# Renaming columns for clarity
+colnames(daily_totals_by_region) <- c(
+  "trip_origin_date",
+  "mode_name",
+  "ti_region",
+  "Total_Tap_Ons",
+  "Total_Tap_Offs"
+)
+
+# Loading and merging the rainfall data set
+rainfall_folder <- "data/rainfall"
+rainfall_files <- list.files(rainfall_folder, pattern = "\\.csv$", full.names = TRUE)
+
+rainfall_list <- lapply(rainfall_files, function(file) {
+  region <- tools::file_path_sans_ext(basename(file))
+  
+  df <- read_csv(file, show_col_types = FALSE)
+  
+  df <- df %>%
+    mutate(
+      ti_region = tolower(trimws(region)),
+      date = as.Date(paste(Year, Month, Day, sep = "-"))
+    ) %>%
+    select(ti_region, date, Rainfall_amount = `Rainfall amount (millimetres)`)
+  
+  return(df)
+})
+
+rainfall_data <- bind_rows(rainfall_list)
+
+# Preparing Opal Patronage data
+daily_totals_by_region <- daily_totals_by_region %>%
+  mutate(
+    ti_region = tolower(trimws(ti_region)),
+    ti_region = gsub(" ", "_", ti_region),
+    trip_origin_date = as.Date(trip_origin_date)
+  )
+
+# Merging the two data sets
+big_data <- daily_totals_by_region %>%
+  left_join(rainfall_data, by = c("ti_region", "trip_origin_date" = "date"))
+
+big_data <- big_data %>%
+  mutate(Rainfall_amount = ifelse(is.na(Rainfall_amount), 0, Rainfall_amount))
+
+# Defining the initial week starting on 1st January 2020
+start_date <- as.Date("2020-01-01")
+
+big_data_weekly <- big_data %>%
+  mutate(
+    week_start = start_date + 7 * ((as.numeric(trip_origin_date - start_date)) %/% 7)
+  ) %>%
+  group_by(week_start, mode_name, ti_region) %>%
+  summarise(
+    Weekly_Tap_Ons = sum(Total_Tap_Ons, na.rm = TRUE),
+    Weekly_Tap_Offs = sum(Total_Tap_Offs, na.rm = TRUE),
+    Weekly_Rainfall = sum(Rainfall_amount, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+\
+
+#### Scatter plots for each suburb: Weekly Train Tap-Ons vs Rainfall in 2022
+
+```{r}
+#| message: false
+#| warning: false
+#| results: 'hide'
+
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+year <- 2022
+
+# Preparing the data
+filtered_data <- big_data_weekly %>%
+  filter(
+    tolower(mode_name) == "train",
+    year(week_start) == year
+  ) %>%
+  mutate(Region = tools::toTitleCase(gsub("_", " ", ti_region))) %>%
+  mutate(
+    Region = case_when(
+      Region == "Sydney Cbd" ~ "Sydney CBD",
+      Region == "Cbd" ~ "CBD",
+      TRUE ~ Region
+    )
+  )
+
+# Calculating the correlation for each chosen suburb.
+correlations <- filtered_data %>%
+  group_by(Region) %>%
+  summarise(
+    r = round(cor(Weekly_Rainfall, Weekly_Tap_Ons, use = "complete.obs"), 2),
+    .groups = "drop"
+  )
+
+# Merging the calculated correlations into the established data set.
+plot_data <- filtered_data %>%
+  left_join(correlations, by = "Region") %>%
+  mutate(label = paste0("r = ", r))
+
+# Putting the r values (correlation coefficient) in each plot.
+label_positions <- plot_data %>%
+  group_by(Region) %>%
+  summarise(
+    x_min = min(Weekly_Rainfall, na.rm = TRUE),
+    x_max = max(Weekly_Rainfall, na.rm = TRUE),
+    y_max = max(Weekly_Tap_Ons, na.rm = TRUE),
+    label = unique(label),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    x = x_min + 0.6 * (x_max - x_min),
+    y = y_max * 0.95
+  )
+
+# Plotting.
+ggplot(plot_data, aes(x = Weekly_Rainfall, y = Weekly_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  facet_wrap(~ Region, scales = "free") +
+  geom_text(
+    data = label_positions,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    size = 4, fontface = "bold", color = "black", hjust = 0
+  ) +
+  labs(
+    title = paste0("Weekly Train Tap-Ons vs Rainfall by Region (", year, ")"),
+    x = "Weekly Rainfall (mm)",
+    y = "Weekly Opal Tap-Ons"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    strip.text = element_text(size = 9, face = "bold"),
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold")
+  )
+```
+
+#### Scatter plots for each suburb: Weekly Bus Tap-Ons vs Rainfall in 2022
+
+```{r}
+#| message: false
+#| warning: false
+#| results: 'hide'
+
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+year <- 2022
+
+# Preparing the data set.
+filtered_data <- big_data_weekly %>%
+  filter(
+    tolower(mode_name) == "bus",
+    year(week_start) == year
+  ) %>%
+  mutate(Region = tools::toTitleCase(gsub("_", " ", ti_region))) %>%
+  mutate(
+    Region = case_when(
+      Region == "Sydney Cbd" ~ "Sydney CBD",
+      Region == "Cbd" ~ "CBD",
+      TRUE ~ Region
+    )
+  )
+
+# Calculating correlation for each district.
+correlations <- filtered_data %>%
+  group_by(Region) %>%
+  summarise(
+    r = round(cor(Weekly_Rainfall, Weekly_Tap_Ons, use = "complete.obs"), 2),
+    .groups = "drop"
+  )
+
+# Merging the correlations into the main data set.
+plot_data <- filtered_data %>%
+  left_join(correlations, by = "Region") %>%
+  mutate(label = paste0("r = ", r))
+
+# Putting the correlation coefficient values in each plot.
+label_positions <- plot_data %>%
+  group_by(Region) %>%
+  summarise(
+    x_min = min(Weekly_Rainfall, na.rm = TRUE),
+    x_max = max(Weekly_Rainfall, na.rm = TRUE),
+    y_max = max(Weekly_Tap_Ons, na.rm = TRUE),
+    label = unique(label),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    x = x_min + 0.6 * (x_max - x_min),
+    y = y_max * 0.95
+  )
+
+# Plotting the graphs.
+ggplot(plot_data, aes(x = Weekly_Rainfall, y = Weekly_Tap_Ons)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  facet_wrap(~ Region, scales = "free") +
+  geom_text(
+    data = label_positions,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    size = 4, fontface = "bold", color = "black", hjust = 0
+  ) +
+  labs(
+    title = paste0("Weekly Bus Tap-Ons vs Rainfall by Region (", year, ")"),
+    x = "Weekly Rainfall (mm)",
+    y = "Weekly Opal Tap-Ons"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    strip.text = element_text(size = 9, face = "bold"),
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold")
+  )
+```
+
+#### Choropleth Map of Number of Train Entries and Population Density in the Greater Sydney Metropolitan area
+
+ABS SA2: <https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files>
+
+ABS Population: <https://www.abs.gov.au/statistics/people/population/regional-population/2021#new-south-wales>
+
+```{r}
+#| message: false
+#| warning: false
+#| results: 'hide'
+
+library(sf)
+library(dplyr)
+library(readr)
+library(ggplot2)
+
+# Loading the SA2 shapefile. SA2 is not as specific as SA3.
+sa2 <- st_read("data/sydney_map/SA2_2021_AUST_GDA2020.shp")
+
+# Loading population density data set.
+pop_density_data <- read_csv("data/sa2_pop.csv")  # Replace with your actual path
+
+# Joining the two data sets.
+sa2_pop <- sa2 %>%
+  left_join(pop_density_data, by = c("SA2_NAME21" = "sa2_name"))
+
+# Loading train entry/exit data set.
+entry_exit_data <- read_csv("data/train_data_entry_exit/aug2024_may2025.csv")
+
+# Filtering certain train stations.
+stations_to_ignore <- c("Rosehill", "Camellia", "Rydalmere", "Dundas", "Telopea", "Carlingford")
+entry_exit_data <- entry_exit_data %>%
+  filter(Station_Type %in% c("train", "Metro Shared")) %>%
+  mutate(Train_Station = gsub(" Station", "", Station),
+         Train_Station = trimws(Train_Station)) %>%
+  filter(!Train_Station %in% stations_to_ignore,
+         Entry_Exit == "Entry") %>%
+  mutate(Trip = ifelse(Trip == "Less than 50", "50", Trip),
+         Trip = as.numeric(Trip))
+
+# Summaring the entries.
+station_summary <- entry_exit_data %>%
+  group_by(Train_Station) %>%
+  summarise(Total_Entries = sum(Trip, na.rm = TRUE))
+
+# Loading train station locations.
+station_locations <- read_csv("data/TrainStationEntranceLocations/stationentrances2020_v4.csv")
+
+# Merging with the summary data.
+stations <- station_locations %>%
+  filter(!duplicated(Train_Station)) %>%
+  inner_join(station_summary, by = "Train_Station") %>%
+  filter(!is.na(LONG) & !is.na(LAT))
+
+# Converting to sf object.
+stations_sf <- st_as_sf(stations, coords = c("LONG", "LAT"), crs = 4326)
+
+# Loading train line shapefile.
+train_lines <- st_read("data/SydneyTrainRoutes/sydneytrains/SydneyTrains.shp")  # Replace with your actual path
+
+# Transforming everything into the same format.
+sa2_pop <- st_transform(sa2_pop, crs = 4326)
+stations_sf <- st_transform(stations_sf, crs = 4326)
+train_lines <- st_transform(train_lines, crs = 4326)
+
+# Resizing the map to the targeted area.
+bbox <- st_bbox(c(xmin = 151.1, ymin = -33.92, xmax = 151.25, ymax = -33.81), crs = st_crs(4326))
+sa2_cropped <- st_crop(sa2_pop, bbox)
+stations_cropped <- st_crop(stations_sf, bbox)
+train_lines_cropped <- st_crop(train_lines, bbox)
+
+# Plotting the choropleth map.
+ggplot() +
+  geom_sf(data = sa2_cropped, aes(fill = pop_density), color = "white", size = 0.5) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90", name = "Population Density") +
+
+  geom_sf(data = train_lines_cropped, color = "red", size = 1, alpha = 0.6) +
+
+  geom_sf(data = stations_cropped, aes(size = Total_Entries, color = Total_Entries), alpha = 0.9) +
+  scale_color_viridis_c(option = "magma", name = "Train Entries") +
+  scale_size_continuous(range = c(1, 8)) +
+
+  coord_sf(xlim = c(bbox["xmin"], bbox["xmax"]), ylim = c(bbox["ymin"], bbox["ymax"])) +
+  labs(
+    title = "Population Density and Train Station Entries in Sydney SA2 Districts",
+    subtitle = "SA2 gradient by population density, with red train lines and entry volume at stations",
+    caption = "Data: ABS SA2 2021, Opal Patronage 2024–2025, Station Entrances"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
